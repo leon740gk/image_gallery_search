@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'django_celery_beat',
-    'django_celery_results',
 
     'core',
 ]
@@ -83,6 +81,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'images',
+        'CLIENT': {
+                'host': os.environ.get('MONGO_HOSR', 'mongo'),
+                'port': os.environ.get('MONGO_PORT', 27017),
+            },
     }
 }
 

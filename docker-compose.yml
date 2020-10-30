@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:5.0.10-alpine
+    networks:
+      - main
+    expose:
+      - "6379"
+    restart: on-failure
+    volumes:
+      - image-redis-data:/data
+
+  mongo:
+    container_name: mongo
+    hostname: mongo
+    image: mongo
+    networks:
+      - main
+    restart: on-failure
+    volumes:
+      - image-mongo-data:/data/db
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    container_name: app
+    depends_on:
+      - mongo
+      - redis
+    image: app-image
+    networks:
+      - main
+    restart: on-failure
+    ports:
+      - "8000:8000"
+
+networks:
+  main:
+
+volumes:
+  image-mongo-data:
+  image-redis-data:
